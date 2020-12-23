@@ -84,7 +84,7 @@ uint8_t bmp_public_buf[17 * 1024];
 void SysTick_Callback() {
   lv_tick_inc(1);
   print_time_count();
-  #if ENABLED(USE_WIFI_FUNCTION)
+  #if ENABLED(MKS_WIFI_MODULE)
     if (tips_disp.timer == TIPS_TIMER_START)
       tips_disp.timer_count++;
   #endif
@@ -217,12 +217,7 @@ void tft_lvgl_init() {
   #endif
 
   if (ready) {
-    #if ENABLED(TOUCH_SCREEN_CALIBRATION)
-      if (touch_calibration.need_calibration()) lv_draw_touch_calibration_screen();
-      else lv_draw_ready_print();
-    #else
-      lv_draw_ready_print();
-    #endif
+    lv_draw_ready_print();
   }
 
   if (mks_test_flag == 0x1E)
@@ -523,7 +518,6 @@ void lv_encoder_pin_init() {
         const uint8_t enc_c = (buttons & EN_C) ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
         if (enc_c != last_button_state) {
           state = enc_c ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
-
           last_button_state = enc_c;
         }
 

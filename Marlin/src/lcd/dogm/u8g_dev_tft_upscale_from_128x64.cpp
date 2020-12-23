@@ -458,7 +458,7 @@ uint8_t u8g_com_hal_tft_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, void *arg_p
     case U8G_COM_MSG_WRITE_SEQ:
       tftio.DataTransferBegin(DATASIZE_16BIT);
       for (uint8_t i = 0; i < arg_val; i += 2)
-        tftio.WriteData(*(uint16_t *)(((uint32_t)arg_ptr) + i));
+        tftio.WriteData(*(uint16_t *)(((uintptr_t)arg_ptr) + i));
       tftio.DataTransferEnd();
       break;
 
@@ -525,6 +525,11 @@ U8G_PB_DEV(u8g_dev_tft_320x240_upscale_from_128x64, WIDTH, HEIGHT, PAGE_HEIGHT, 
       lcd_put_u8str(0, LCD_PIXEL_HEIGHT / 2, str);
     } while (u8g.nextPage());
     drawing_screen = false;
+    safe_delay(250);
+    if (calibration_stage == CALIBRATION_SUCCESS) {
+      safe_delay(500);
+      ui.goto_previous_screen();
+    }
   }
 
 #endif // TOUCH_SCREEN_CALIBRATION
